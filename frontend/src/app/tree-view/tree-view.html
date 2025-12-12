@@ -1,0 +1,41 @@
+<div class="tree-container">
+  <h3>Arborescence</h3>
+  <ul>
+    <!-- Utilise <ng-container> pour appliquer *ngFor et *ngIf séparément -->
+    <ng-container *ngFor="let item of tree">
+      <li *ngIf="item.isDirectory" class="tree-item">
+        <div (click)="selectItem(item)" class="tree-node">
+          <span class="folder">
+            📁 {{ item.name }}
+          </span>
+        </div>
+
+        <!-- Sous-dossiers -->
+        <ul *ngIf="item.children && item.children.length > 0" class="children">
+          <ng-container *ngFor="let child of item.children">
+            <li *ngIf="child.isDirectory" class="tree-item">
+              <div (click)="selectItem(child)" class="tree-node">
+                <span class="folder">
+                  📁 {{ child.name }}
+                </span>
+              </div>
+
+              <!-- Sous-sous-dossiers -->
+              <ul *ngIf="child.children && child.children.length > 0" class="children">
+                <ng-container *ngFor="let grandChild of child.children">
+                  <li *ngIf="grandChild.isDirectory" class="tree-item">
+                    <div (click)="selectItem(grandChild)" class="tree-node">
+                      <span class="folder">
+                        📁 {{ grandChild.name }}
+                      </span>
+                    </div>
+                  </li>
+                </ng-container>
+              </ul>
+            </li>
+          </ng-container>
+        </ul>
+      </li>
+    </ng-container>
+  </ul>
+</div>

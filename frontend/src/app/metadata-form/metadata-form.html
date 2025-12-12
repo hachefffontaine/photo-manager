@@ -1,0 +1,15 @@
+<div *ngIf="selectedFile" class="metadata-form">
+  <h4>Modifier les métadonnées de : {{ selectedFile.name }}</h4>
+  <div>
+    <label>Tags (ex: vacances, 2024):</label>
+    <input [(ngModel)]="tags" placeholder="Tags séparés par virgule">
+  </div>
+  <div>
+    <label>Personne :</label>
+    <input [(ngModel)]="person" placeholder="Nom de la personne">
+  </div>
+  <button (click)="save()">Enregistrer</button>
+  <div *ngIf="message" [class.success]="success" [class.error]="!success">
+    {{ message }}
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="file-list">
+  <ng-container *ngIf="files && files.length > 0">
+    <div class="file-item" *ngFor="let file of files;  let i = index" (click)="selectFile(file, i)">
+    <span class="file-icon">
+      {{ getFileTypeIcon(file) }}
+    </span>
+    <span class="file-name" [class.file]="!file.isDirectory">
+      {{ file.name }}
+    </span>
+  </div>
+  </ng-container>
+
+  <div *ngIf="!files || files.length === 0" class="empty">
+    Aucun fichier dans ce dossier.
+  </div>
+
+  <div class="preview-zone" *ngIf="selectedFile">
+    <div *ngIf="isImage(selectedFile)" class="preview-image">
+      <img [src]="'http://localhost:3000/api/filesystem/file?path=' + selectedFile.path"  [alt]="selectedFile.name" />
+    </div>
+
+    <div *ngIf="isVideo(selectedFile)" class="preview-video">
+      <video controls width="100%" height="auto" [src]="'http://localhost:3000/file?path=' + selectedFile.path" type="video/mp4"></video>
+    </div>
+
+    <div *ngIf="isPdf(selectedFile)" class="preview-pdf">
+      <iframe [src]="'http://localhost:3000/file?path=' + selectedFile.path" width="100%" height="500px" frameborder="0"></iframe>
+    </div>
+
+    <div *ngIf="!isImage(selectedFile) && !isVideo(selectedFile) && !isPdf(selectedFile) && !isText(selectedFile)" class="preview-other">
+      <h3>{{ selectedFile.name }}</h3>
+      <p><strong>Type :</strong> {{ getDisplayType(selectedFile) }}</p>
+      <p><strong>Taille :</strong> {{ selectedFile.size }} octets</p>
+    </div>
+  </div>
+</div>
