@@ -21,6 +21,7 @@ import { environment } from '../environment/environment';
 export class App {
   selectedFolder: any = null;
   selectedFile: any = null;
+  resultSearchFiles: any[] | null = null;
 
   private readonly ROOT_PATH = environment.filesystem.rootPath;
 
@@ -35,9 +36,15 @@ export class App {
   onFolderSelect(folder: any) {
     this.selectedFolder = { ...folder };
     this.selectedFile = null;
+    this.resultSearchFiles = [];
   }
 
   onFileSelect(file: any) {
     this.selectedFile = file;
+  }
+
+  onResultSearch(files: any[]) {
+    this.resultSearchFiles = files;
+    console.log( this.resultSearchFiles);
   }
 }

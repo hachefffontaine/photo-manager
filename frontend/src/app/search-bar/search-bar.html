@@ -5,11 +5,5 @@
     placeholder="Rechercher par tag (ex: 2018)"
     type="text"
   />
-  <button (click)="search()" style="margin-top: 10px;">Rechercher</button>
-  <div *ngIf="results && results.length > 0" class="search-results">
-    <h5>Résultats :</h5>
-    <ul>
-      <li *ngFor="let file of results">{{ file }}</li>
-    </ul>
-  </div>
+  <button (click)="search()" style="margin-top: 10px;">Rechercher</button>  
 </div>

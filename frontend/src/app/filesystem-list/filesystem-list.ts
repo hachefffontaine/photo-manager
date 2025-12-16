@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectorRef, HostListener  } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectorRef, HostListener, SimpleChanges  } from '@angular/core';
 import { Filesystem } from '../services/filesystem';
 import { CommonModule } from '@angular/common';
 
@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 export class FilesystemList {
 
   @Input() selectedFolder: any = null;
+  @Input() resultSearchFiles: any[] | null = null;
   @Output() onFileSelect = new EventEmitter<any>();
   files: any[] = [];
   selectedFileIndex: number = -1;
@@ -19,15 +20,46 @@ export class FilesystemList {
 
   constructor(private fsService: Filesystem, private cdr: ChangeDetectorRef) { }
 
-  ngOnChanges() {
-    console.log('📁 FileBrowser reçoit selectedFolder :', this.selectedFolder);
-    if (this.selectedFolder && this.selectedFolder.isDirectory) {
-      this.loadFiles();
-    } else {
-      this.selectedFileIndex = -1;
-      this.files = [];
+  ngOnChanges(changes: SimpleChanges) {
+    // Vérifier si selectedFolder a changé
+    if (changes['selectedFolder']) {
+      console.log('📁 FileBrowser reçoit selectedFolder :', this.selectedFolder);
+      if (this.selectedFolder && this.selectedFolder.isDirectory) {
+        // Si resultSearchFiles est défini, on l'ignore (priorité)
+        if (this.resultSearchFiles === null) {
+          this.loadFiles();
+        }
+      } else {
+        this.resetFiles();
+      }
+    }
+
+    // Vérifier si resultSearchFiles a changé
+    if (changes['resultSearchFiles']) {
+      console.log('🔍 FileBrowser reçoit resultSearchFiles :', this.resultSearchFiles);
+      if (this.resultSearchFiles !== null) {        
+        this.files = [...this.resultSearchFiles]; // 👈 Copie profonde pour éviter les références
+        this.selectedFileIndex = -1;
+        this.selectedFile = null;
+        // Optionnel : déclencher une détection de changement si nécessaire
+        this.cdr.markForCheck();
+      } else {
+        // Si resultSearchFiles devient null, on revient au comportement de selectedFolder
+        if (this.selectedFolder && this.selectedFolder.isDirectory) {
+          this.loadFiles();
+        } else {
+          this.resetFiles();
+        }
+      }
     }
   }
+
+  // Méthode utilitaire pour réinitialiser les fichiers
+  private resetFiles() {
+    this.files = [];
+    this.selectedFileIndex = -1;
+    this.selectedFile = null;
+  }  
 
   loadFiles() {
     console.log('📥 Chargement des fichiers de :', this.selectedFolder.path);
@@ -54,7 +86,7 @@ export class FilesystemList {
     }
   }
 
-    getFileTypeIcon(file: any): string {
+  getFileTypeIcon(file: any): string {
     if (file.isDirectory) {
       return '📁'; // Dossier
     }

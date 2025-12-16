@@ -1,8 +1,8 @@
 <div class="app-container">
   <app-tree-view (onFolderSelect)="onFolderSelect($event)"></app-tree-view>
   <div class="main-content">
-    <app-filesystem-list [selectedFolder]="selectedFolder" (onFileSelect)="onFileSelect($event)"></app-filesystem-list>
+    <app-filesystem-list [selectedFolder]="selectedFolder" [resultSearchFiles]="resultSearchFiles" (onFileSelect)="onFileSelect($event)"></app-filesystem-list>
     <app-metadata-form [selectedFile]="selectedFile" (onClose)="selectedFile = null"></app-metadata-form>
   </div>
-  <app-search-bar></app-search-bar>
+  <app-search-bar (onResultSearch)="onResultSearch($event)"></app-search-bar>
 </div>

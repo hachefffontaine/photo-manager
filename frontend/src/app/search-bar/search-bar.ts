@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Search } from '../services/search';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +12,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class SearchBar {
   query: string = '';
-  results: string[] = [];
+
+  @Output() onResultSearch = new EventEmitter<any[]>();
 
   constructor(private searchService: Search) { }
 
@@ -20,7 +21,7 @@ export class SearchBar {
     if (!this.query.trim()) return;
     this.searchService.search(this.query).subscribe({
       next: (res: any) => {
-        this.results = res.results;
+        this.onResultSearch.emit(res.files);
       },
       error: (err) => {
         alert('Erreur de recherche : ' + err.error?.error);
